@@ -3,220 +3,474 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SGFRP Informational Phases - Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <title>SGFRP Dashboard</title>
     <style>
-        * { font-family: 'Segoe UI', system-ui, sans-serif; }
-        .fade-in { animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
-        .phase-btn.active { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-            color: white; 
-            box-shadow: 0 10px 25px -5px rgba(102, 126, 234, 0.3);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        .card-hover:hover { transform: translateY(-2px); transition: all 0.2s; }
-        .gradient-bg { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%); }
-        .success-toast {
+        body {
+            background: #0a0e27;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e5e7eb;
+        }
+        .header {
+            background: #0f1433;
+            border-bottom: 1px solid #1a2050;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            background: #1e3a8a;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .logo-text h2 {
+            font-size: 18px;
+            color: white;
+        }
+        .logo-text p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .user-area {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .username {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .btn-admin {
+            background: #1e3a8a;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: white;
+            text-decoration: none;
+        }
+        .btn-logout {
+            background: #7f1d1d;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #fca5a5;
+            cursor: pointer;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        .phase-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: center;
+        }
+        .phase-btn {
+            background: #0f1433;
+            border: 1px solid #1f2940;
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: #9ca3af;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+        .phase-btn small {
+            display: block;
+            font-size: 11px;
+            margin-top: 4px;
+        }
+        .phase-btn.active {
+            background: #1e3a8a;
+            border-color: #3b82f6;
+            color: white;
+        }
+        .info-bar {
+            background: #0f1433;
+            border: 1px solid #1a2050;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .info-title {
+            color: white;
+            font-weight: 600;
+        }
+        .info-score {
+            color: #9ca3af;
+            font-size: 14px;
+        }
+        .action-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            border: none;
+        }
+        .action-btn.green {
+            background: #064e3b;
+            color: #6ee7b7;
+        }
+        .action-btn.blue {
+            background: #1e3a8a;
+            color: #93c5fd;
+        }
+        .action-btn.gray {
+            background: #1f2937;
+            color: #9ca3af;
+        }
+        .questions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .question-card {
+            background: #0f1433;
+            border: 1px solid #1a2050;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .q-badge {
+            background: #1e3a8a;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+        .edit-btn:hover {
+            background: #1f2937;
+            color: white;
+        }
+        .question-text {
+            color: white;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+        .answer-box {
+            background: #0a0e24;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .answer-label {
+            color: #22c55e;
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+        .answer-text {
+            color: #d1d5db;
+            font-size: 14px;
+        }
+        .keywords {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .keyword-tag {
+            background: #1f2937;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #9ca3af;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 48px;
+            background: #0f1433;
+            border-radius: 12px;
+            color: #6b7280;
+        }
+        .modal {
+            display: none;
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
             z-index: 1000;
-            animation: slideIn 0.3s ease-out;
+            align-items: center;
+            justify-content: center;
         }
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        .modal-content {
+            background: #0f1433;
+            border: 1px solid #2a3760;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
         }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #1e1e2e; }
-        ::-webkit-scrollbar-thumb { background: #4a4a6a; border-radius: 4px; }
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #1f2940;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            color: white;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .modal-body {
+            padding: 20px;
+        }
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #1f2940;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0a0e24;
+            border: 1px solid #1f2940;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+        .btn-save {
+            background: #1e3a8a;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+        }
+        .btn-delete {
+            background: #7f1d1d;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: #fca5a5;
+            cursor: pointer;
+        }
+        .btn-cancel {
+            background: #1f2937;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: #9ca3af;
+            cursor: pointer;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1f2937;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            display: none;
+            z-index: 1100;
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen text-gray-200">
-
-    <!-- Header -->
-    <header class="bg-gray-900/80 backdrop-blur-md border-b border-gray-700 sticky top-0 z-10">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                        <i class="ri-shield-star-line text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-                            SGFRP Informational Phases
-                        </h1>
-                        <p class="text-xs text-gray-400">Admin Management Dashboard</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-300 hidden md:block">
-                        <i class="ri-admin-line"></i> <span id="currentUser">Loading...</span>
-                    </span>
-                    <button id="adminPanelBtn" class="px-3 py-2 bg-purple-600/20 hover:bg-purple-600/30 rounded-lg text-sm text-purple-300 transition border border-purple-500/30">
-                        <i class="ri-user-settings-line mr-1"></i> Users
-                    </button>
-                    <button onclick="logout()" class="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-sm text-red-300 transition border border-red-500/30">
-                        <i class="ri-logout-box-line mr-1"></i> Logout
-                    </button>
-                </div>
+<body>
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon">🛡️</div>
+            <div class="logo-text">
+                <h2>SGFRP Informational Phases</h2>
+                <p>Admin Management Dashboard</p>
             </div>
         </div>
-    </header>
+        <div class="user-area">
+            <span class="username" id="currentUser">Loading...</span>
+            <a href="admin.html" class="btn-admin">👥 Users</a>
+            <span class="btn-logout" onclick="logout()">🚪 Logout</span>
+        </div>
+    </div>
 
-    <main class="container mx-auto px-4 py-8">
-        <!-- Phase Selector -->
-        <div class="flex flex-wrap justify-center gap-3 mb-8">
-            <button data-phase="001" class="phase-btn px-6 py-3 rounded-xl bg-gray-800/50 text-gray-300 font-medium transition-all duration-200 hover:bg-gray-700/50">
-                <i class="ri-gamepad-line mr-2"></i>Info 001<br><span class="text-xs opacity-75">Game Management</span>
-            </button>
-            <button data-phase="002" class="phase-btn px-6 py-3 rounded-xl bg-gray-800/50 text-gray-300 font-medium transition-all duration-200 hover:bg-gray-700/50">
-                <i class="ri-group-line mr-2"></i>Info 002<br><span class="text-xs opacity-75">Community Moderation</span>
-            </button>
-            <button data-phase="003" class="phase-btn px-6 py-3 rounded-xl bg-gray-800/50 text-gray-300 font-medium transition-all duration-200 hover:bg-gray-700/50">
-                <i class="ri-file-paper-line mr-2"></i>Info 003<br><span class="text-xs opacity-75">Appeal Management</span>
-            </button>
-            <button data-phase="004" class="phase-btn px-6 py-3 rounded-xl bg-gray-800/50 text-gray-300 font-medium transition-all duration-200 hover:bg-gray-700/50">
-                <i class="ri-security-line mr-2"></i>Info 004<br><span class="text-xs opacity-75">Event Security</span>
-            </button>
+    <div class="container">
+        <div class="phase-tabs">
+            <button class="phase-btn active" data-phase="001">📁 Info 001<br><small>Game Management</small></button>
+            <button class="phase-btn" data-phase="002">💬 Info 002<br><small>Community Moderation</small></button>
+            <button class="phase-btn" data-phase="003">📋 Info 003<br><small>Appeal Management</small></button>
+            <button class="phase-btn" data-phase="004">🔒 Info 004<br><small>Event Security</small></button>
         </div>
 
-        <!-- Phase Info Bar -->
-        <div id="phaseInfo" class="bg-gray-800/30 rounded-xl p-4 mb-6 text-center border border-gray-700/50">
-            <span class="text-gray-400">Select a phase to view questions</span>
+        <div id="infoBar" class="info-bar">
+            <span class="info-title">Game Management</span>
+            <span class="info-score">Need 7/9 to pass</span>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex flex-wrap justify-end gap-3 mb-6">
-            <button onclick="openAddQuestionModal()" class="px-4 py-2 bg-green-600/20 hover:bg-green-600/30 rounded-lg text-green-300 transition border border-green-500/30">
-                <i class="ri-add-line mr-1"></i> Add Question
-            </button>
-            <button onclick="openSettingsModal()" class="px-4 py-2 bg-blue-600/20 hover:bg-blue-600/30 rounded-lg text-blue-300 transition border border-blue-500/30">
-                <i class="ri-settings-4-line mr-1"></i> Phase Settings
-            </button>
-            <button onclick="exportData()" class="px-4 py-2 bg-gray-600/20 hover:bg-gray-600/30 rounded-lg text-gray-300 transition border border-gray-500/30">
-                <i class="ri-download-2-line mr-1"></i> Export
-            </button>
+        <div class="action-bar">
+            <button class="action-btn green" onclick="openAddModal()">➕ Add Question</button>
+            <button class="action-btn blue" onclick="openSettingsModal()">⚙️ Phase Settings</button>
+            <button class="action-btn gray" onclick="exportData()">📥 Export Backup</button>
         </div>
 
-        <!-- Questions Container -->
-        <div id="questionsContainer" class="space-y-4">
-            <div class="text-center text-gray-400 py-12">
-                <i class="ri-information-line text-4xl mb-3 block"></i>
-                Select a phase to view questions
+        <div id="questionsContainer" class="questions-list">
+            <div class="empty-state">Loading questions...</div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>✏️ Edit Question</h3>
+                <button class="close-modal" onclick="closeModal('editModal')">×</button>
             </div>
-        </div>
-    </main>
-
-    <!-- Edit Question Modal -->
-    <div id="editModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-gray-800 rounded-2xl w-full max-w-3xl mx-4 shadow-2xl border border-gray-700 fade-in max-h-[90vh] overflow-y-auto">
-            <div class="p-6 border-b border-gray-700 flex justify-between items-center sticky top-0 bg-gray-800 rounded-t-2xl">
-                <h3 class="text-xl font-semibold text-white">✏️ Edit Question</h3>
-                <button onclick="closeModal('editModal')" class="text-gray-400 hover:text-white transition">
-                    <i class="ri-close-line text-2xl"></i>
-                </button>
-            </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Question Number</label>
-                    <input id="editQuestionNumber" type="number" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Question Number</label>
+                    <input type="number" id="editNumber">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Question Text</label>
-                    <textarea id="editQuestionText" rows="3" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white"></textarea>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <textarea id="editQuestion" rows="3"></textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Correct Answer</label>
-                    <textarea id="editAnswer" rows="4" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white"></textarea>
+                <div class="form-group">
+                    <label>Correct Answer</label>
+                    <textarea id="editAnswer" rows="4"></textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Keywords (comma separated)</label>
-                    <input id="editKeywords" type="text" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="keyword1, keyword2, keyword3">
+                <div class="form-group">
+                    <label>Keywords (comma separated)</label>
+                    <input type="text" id="editKeywords" placeholder="keyword1, keyword2">
                 </div>
             </div>
-            <div class="p-6 border-t border-gray-700 flex justify-end space-x-3 sticky bottom-0 bg-gray-800 rounded-b-2xl">
-                <button onclick="closeModal('editModal')" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">Cancel</button>
-                <button onclick="saveQuestion()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded-lg transition font-medium">Save Changes</button>
-                <button onclick="deleteQuestion()" class="px-4 py-2 bg-red-600/20 hover:bg-red-600/30 text-red-300 rounded-lg transition">Delete</button>
+            <div class="modal-footer">
+                <button class="btn-delete" onclick="deleteQuestion()">🗑️ Delete</button>
+                <button class="btn-cancel" onclick="closeModal('editModal')">Cancel</button>
+                <button class="btn-save" onclick="saveQuestion()">💾 Save</button>
             </div>
         </div>
     </div>
 
-    <!-- Add Question Modal -->
-    <div id="addModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-gray-800 rounded-2xl w-full max-w-3xl mx-4 shadow-2xl border border-gray-700 fade-in">
-            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="text-xl font-semibold text-white">➕ Add New Question</h3>
-                <button onclick="closeModal('addModal')" class="text-gray-400 hover:text-white transition">
-                    <i class="ri-close-line text-2xl"></i>
-                </button>
+    <!-- Add Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>➕ Add New Question</h3>
+                <button class="close-modal" onclick="closeModal('addModal')">×</button>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Question Number</label>
-                    <input id="addQuestionNumber" type="number" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Question Number</label>
+                    <input type="number" id="addNumber">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Question Text</label>
-                    <textarea id="addQuestionText" rows="3" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white"></textarea>
+                <div class="form-group">
+                    <label>Question Text</label>
+                    <textarea id="addQuestion" rows="3"></textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Correct Answer</label>
-                    <textarea id="addAnswer" rows="4" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white"></textarea>
+                <div class="form-group">
+                    <label>Correct Answer</label>
+                    <textarea id="addAnswer" rows="4"></textarea>
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Keywords (comma separated)</label>
-                    <input id="addKeywords" type="text" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="keyword1, keyword2, keyword3">
+                <div class="form-group">
+                    <label>Keywords (comma separated)</label>
+                    <input type="text" id="addKeywords" placeholder="keyword1, keyword2">
                 </div>
             </div>
-            <div class="p-6 border-t border-gray-700 flex justify-end space-x-3">
-                <button onclick="closeModal('addModal')" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">Cancel</button>
-                <button onclick="addQuestion()" class="px-4 py-2 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 rounded-lg transition font-medium">Add Question</button>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('addModal')">Cancel</button>
+                <button class="btn-save" onclick="addQuestion()">➕ Add</button>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-gray-800 rounded-2xl w-full max-w-md mx-4 shadow-2xl border border-gray-700 fade-in">
-            <div class="p-6 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="text-xl font-semibold text-white">⚙️ Phase Settings</h3>
-                <button onclick="closeModal('settingsModal')" class="text-gray-400 hover:text-white transition">
-                    <i class="ri-close-line text-2xl"></i>
-                </button>
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Phase Settings</h3>
+                <button class="close-modal" onclick="closeModal('settingsModal')">×</button>
             </div>
-            <div class="p-6 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Phase Name</label>
-                    <input id="settingsPhaseName" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Phase Name</label>
+                    <input type="text" id="settingsName">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Total Questions</label>
-                    <input id="settingsTotal" type="number" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white">
+                <div class="form-group">
+                    <label>Total Questions</label>
+                    <input type="number" id="settingsTotal">
                 </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Passing Score</label>
-                    <input id="settingsPassing" type="number" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white">
+                <div class="form-group">
+                    <label>Passing Score</label>
+                    <input type="number" id="settingsPassing">
                 </div>
             </div>
-            <div class="p-6 border-t border-gray-700 flex justify-end">
-                <button onclick="saveSettings()" class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg font-medium">Save Settings</button>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal('settingsModal')">Cancel</button>
+                <button class="btn-save" onclick="saveSettings()">💾 Save</button>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notification -->
-    <div id="toast" class="success-toast hidden bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 shadow-lg">
-        <span id="toastMessage" class="text-sm"></span>
-    </div>
+    <div id="toast" class="toast"></div>
 
     <script type="module">
-        // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, deleteDoc, addDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, setDoc, collection, getDocs, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1LtDoqN6yMP70xLbY_8HRkM4STJvFk0M",
@@ -229,282 +483,226 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-
-        let currentUser = null;
+        
         let currentPhase = '001';
         let currentEditId = null;
-
-        // Phase settings
+        let currentUser = null;
+        
         const phaseSettings = {
             '001': { name: 'Game Management', total: 9, passing: 7 },
             '002': { name: 'Community Moderation', total: 9, passing: 8 },
             '003': { name: 'Appeal Management', total: 10, passing: 7 },
             '004': { name: 'Event Management & Security', total: 10, passing: 7 }
         };
-
-        // Default questions
+        
         const DEFAULT_QUESTIONS = {
             '001': [
-                { id: 1, question: 'What is game moderation?', correct_answer: 'Maintaining a professional standard while handling in-game issues.', keywords: ['maintaining', 'professional standard', 'handling', 'in-game issues'] },
+                { id: 1, question: 'What is game moderation?', correct_answer: 'Maintaining a professional standard while handling in-game issues.', keywords: ['maintaining', 'professional standard'] },
                 { id: 2, question: 'How many moderation stages are there?', correct_answer: '5', keywords: ['5', 'five'] },
-                { id: 3, question: 'What is the third moderation step?', correct_answer: 'Check Past Infractions and Find the Correct Punishment.', keywords: ['check past infractions', 'find correct punishment', 'third'] },
-                { id: 4, question: 'Why is it important to log everything?', correct_answer: 'It protects you as a moderator, helps the team track repeat offenders, and ensures consistency across the staff team.', keywords: ['protects', 'moderator', 'track repeat offenders', 'consistency', 'staff team'] },
-                { id: 5, question: 'What is the fourth step of moderation?', correct_answer: 'Request or Carry Out the Punishment.', keywords: ['request', 'carry out', 'punishment', 'fourth'] },
-                { id: 6, question: 'Why is it important to wait before jumping into a situation?', correct_answer: 'To understand the full context, take mental notes, and see if the situation can de-escalate itself.', keywords: ['understand full context', 'mental notes', 'de-escalate'] },
-                { id: 7, question: 'What is the first step of moderation?', correct_answer: 'Observe and Take Note.', keywords: ['observe', 'take note', 'first'] },
-                { id: 8, question: 'What type of proof is accepted?', correct_answer: 'Recordings or screenshots that show the player\'s name and the specific violation clearly.', keywords: ['recordings', 'screenshots', 'player name', 'violation clearly'] },
-                { id: 9, question: 'Where do we record proof?', correct_answer: 'In the staff logs (player database).', keywords: ['staff logs', 'player database', 'logs'] }
+                { id: 3, question: 'What is the third moderation step?', correct_answer: 'Check Past Infractions and Find the Correct Punishment.', keywords: ['check past infractions', 'find correct punishment'] },
+                { id: 4, question: 'Why is it important to log everything?', correct_answer: 'It protects you as a moderator, helps the team track repeat offenders, and ensures consistency across the staff team.', keywords: ['protects', 'track repeat offenders', 'consistency'] },
+                { id: 5, question: 'What is the fourth step of moderation?', correct_answer: 'Request or Carry Out the Punishment.', keywords: ['request', 'carry out', 'punishment'] },
+                { id: 6, question: 'Why is it important to wait before jumping into a situation?', correct_answer: 'To understand the full context, take mental notes, and see if the situation can de-escalate itself.', keywords: ['full context', 'mental notes', 'de-escalate'] },
+                { id: 7, question: 'What is the first step of moderation?', correct_answer: 'Observe and Take Note.', keywords: ['observe', 'take note'] },
+                { id: 8, question: 'What type of proof is accepted?', correct_answer: 'Recordings or screenshots that show the player\'s name and the specific violation clearly.', keywords: ['recordings', 'screenshots', 'player name'] },
+                { id: 9, question: 'Where do we record proof?', correct_answer: 'In the staff logs (player database).', keywords: ['staff logs', 'player database'] }
             ],
             '002': [
-                { id: 1, question: 'What is community moderation?', correct_answer: 'Managing a chat environment on social platforms, focusing on speed and maintaining a positive vibe.', keywords: ['managing', 'chat environment', 'social platforms', 'speed', 'positive vibe'] },
-                { id: 2, question: 'Why is community moderation different than game moderation?', correct_answer: 'It requires different skills: managing conversation flow, using screenshots/audit logs instead of in-game recordings, and prioritizing speed and positive vibe.', keywords: ['different skills', 'conversation flow', 'screenshots', 'audit logs', 'speed', 'positive vibe'] },
-                { id: 3, question: 'Why do we have community moderators?', correct_answer: 'To make the community a welcoming place for everyone and stop problems before they grow.', keywords: ['welcoming place', 'stop problems', 'before they grow'] },
-                { id: 4, question: 'What is the very first step a community moderator should take when overseeing a text channel?', correct_answer: 'Monitor and take note of the conversation flow.', keywords: ['monitor', 'take note', 'conversation flow'] },
-                { id: 5, question: 'When gathering proof for a rule violation, which details are most critical to include in your evidence?', correct_answer: 'Clear screenshots showing the user identification and timestamp, or use logging tools/audit logs.', keywords: ['clear screenshots', 'user identification', 'timestamp', 'logging tools', 'audit logs'] },
-                { id: 6, question: 'Why is it important to check a user\'s past infractions before deciding on a punishment?', correct_answer: 'A minor first offense may only need a verbal reminder, while repeated infractions require a firmer response.', keywords: ['minor first offense', 'verbal reminder', 'repeated infractions', 'firmer response'] },
-                { id: 7, question: 'What is the recommended action if an entire chat channel is becoming chaotic and hard to manage?', correct_answer: 'Apply a slow mode to the channel.', keywords: ['apply', 'slow mode', 'channel'] },
-                { id: 8, question: 'What is the primary purpose of the final step: Log Your Punishment?', correct_answer: 'So the staff team stays coordinated across all shifts, and other moderators can review the case if needed.', keywords: ['staff team', 'coordinated', 'shifts', 'review the case'] },
-                { id: 9, question: 'Where do we record proof?', correct_answer: 'In the staff database, saving screenshots and logging the context/conversation.', keywords: ['staff database', 'saving screenshots', 'logging context'] }
+                { id: 1, question: 'What is community moderation?', correct_answer: 'Managing a chat environment on social platforms, focusing on speed and maintaining a positive vibe.', keywords: ['chat environment', 'speed', 'positive vibe'] },
+                { id: 2, question: 'Why is community moderation different than game moderation?', correct_answer: 'It requires different skills: managing conversation flow, using screenshots/audit logs instead of in-game recordings, and prioritizing speed and positive vibe.', keywords: ['different skills', 'conversation flow', 'audit logs'] },
+                { id: 3, question: 'Why do we have community moderators?', correct_answer: 'To make the community a welcoming place for everyone and stop problems before they grow.', keywords: ['welcoming place', 'stop problems'] },
+                { id: 4, question: 'What is the very first step a community moderator should take when overseeing a text channel?', correct_answer: 'Monitor and take note of the conversation flow.', keywords: ['monitor', 'take note'] },
+                { id: 5, question: 'When gathering proof for a rule violation, which details are most critical to include in your evidence?', correct_answer: 'Clear screenshots showing the user identification and timestamp, or use logging tools/audit logs.', keywords: ['screenshots', 'timestamp', 'audit logs'] },
+                { id: 6, question: 'Why is it important to check a user\'s past infractions before deciding on a punishment?', correct_answer: 'A minor first offense may only need a verbal reminder, while repeated infractions require a firmer response.', keywords: ['verbal reminder', 'repeated infractions'] },
+                { id: 7, question: 'What is the recommended action if an entire chat channel is becoming chaotic and hard to manage?', correct_answer: 'Apply a slow mode to the channel.', keywords: ['slow mode'] },
+                { id: 8, question: 'What is the primary purpose of the final step: Log Your Punishment?', correct_answer: 'So the staff team stays coordinated across all shifts, and other moderators can review the case if needed.', keywords: ['coordinated', 'review the case'] },
+                { id: 9, question: 'Where do we record proof?', correct_answer: 'In the staff database, saving screenshots and logging the context/conversation.', keywords: ['staff database', 'saving screenshots'] }
             ],
             '003': [
-                { id: 1, question: 'Why is it essential for the staff member claiming an appeal ticket to be impartial?', correct_answer: 'The moderator who claims the ticket must have had no involvement in the original case. Objectivity is the priority; you must approach the appeal without personal bias.', keywords: ['no involvement', 'original case', 'objectivity', 'priority', 'without personal bias'] },
-                { id: 2, question: 'What is the first step a staff member must take after claiming an appeal ticket?', correct_answer: 'Revision of punishment and evidence provided by the prosecutor (carefully review the logs or screenshots that led to the initial disciplinary action).', keywords: ['revision', 'punishment', 'evidence', 'prosecutor', 'logs', 'screenshots'] },
-                { id: 3, question: 'In step two, what is the primary focus when revising the prosecutor\'s evidence?', correct_answer: 'Determine if the evidence actually supports the rule break that was cited.', keywords: ['determine', 'evidence', 'supports', 'rule break', 'cited'] },
-                { id: 4, question: 'What should an adjudicator look for when reviewing evidence provided by the defense?', correct_answer: 'Read the user\'s explanation and examine any counter-proof they have submitted. Verify if their defense provides context that changes the nature of the event.', keywords: ['read', 'explanation', 'counter-proof', 'verify', 'defense', 'context', 'changes'] },
-                { id: 5, question: 'Who must grant permission before an appeal decision is finalized and communicated?', correct_answer: 'An HQ member.', keywords: ['HQ', 'member', 'HQ member'] },
-                { id: 6, question: 'What are the three possible outcomes that can be reached during the decision step?', correct_answer: 'Uphold the original penalty, reduce it, or overturn it entirely.', keywords: ['uphold', 'original penalty', 'reduce', 'overturn'] },
-                { id: 7, question: 'What is the duration and purpose of the probation period for an approved appeal?', correct_answer: '1 week. Purpose: To ensure the reinstated user can follow the rules.', keywords: ['1 week', 'week', 'ensure', 'reinstated user', 'follow the rules'] },
-                { id: 8, question: 'How often is a user monitored during the final surveillance step of the process?', correct_answer: 'Once every thirty days.', keywords: ['once', 'every thirty days', '30 days', 'thirty days'] },
+                { id: 1, question: 'Why is it essential for the staff member claiming an appeal ticket to be impartial?', correct_answer: 'The moderator who claims the ticket must have had no involvement in the original case. Objectivity is the priority.', keywords: ['no involvement', 'original case', 'objectivity'] },
+                { id: 2, question: 'What is the first step a staff member must take after claiming an appeal ticket?', correct_answer: 'Revision of punishment and evidence provided by the prosecutor.', keywords: ['revision', 'punishment', 'evidence'] },
+                { id: 3, question: 'In step two, what is the primary focus when revising the prosecutor\'s evidence?', correct_answer: 'Determine if the evidence actually supports the rule break that was cited.', keywords: ['determine', 'evidence', 'supports'] },
+                { id: 4, question: 'What should an adjudicator look for when reviewing evidence provided by the defense?', correct_answer: 'Read the user\'s explanation and examine any counter-proof they have submitted.', keywords: ['explanation', 'counter-proof'] },
+                { id: 5, question: 'Who must grant permission before an appeal decision is finalized and communicated?', correct_answer: 'An HQ member.', keywords: ['HQ', 'member'] },
+                { id: 6, question: 'What are the three possible outcomes that can be reached during the decision step?', correct_answer: 'Uphold the original penalty, reduce it, or overturn it entirely.', keywords: ['uphold', 'reduce', 'overturn'] },
+                { id: 7, question: 'What is the duration and purpose of the probation period for an approved appeal?', correct_answer: '1 week to ensure the reinstated user can follow the rules.', keywords: ['1 week', 'follow the rules'] },
+                { id: 8, question: 'How often is a user monitored during the final surveillance step of the process?', correct_answer: 'Once every thirty days.', keywords: ['once', 'thirty days'] },
                 { id: 9, question: 'What happens if a user commits a rule violation during their one-week probation?', correct_answer: 'Immediate return of the ban.', keywords: ['immediate', 'return', 'ban'] },
-                { id: 10, question: 'Why is the monthly surveillance step scheduled to last for a total of three months?', correct_answer: 'Long-term monitoring ensures that the user has successfully reformed their behavior.', keywords: ['long-term monitoring', 'ensures', 'successfully reformed', 'behavior'] }
+                { id: 10, question: 'Why is the monthly surveillance step scheduled to last for a total of three months?', correct_answer: 'Long-term monitoring ensures the user has successfully reformed their behavior.', keywords: ['long-term monitoring', 'reformed'] }
             ],
             '004': [
-                { id: 1, question: 'Why is it important to identify choke points before an event starts?', correct_answer: 'Because choke points are areas where lag or conflict may occur; identifying them allows for a rapid response to any disruption.', keywords: ['choke points', 'lag', 'conflict', 'rapid response', 'disruption'] },
-                { id: 2, question: 'What is the primary benefit of assigning moderators to specific coordinates?', correct_answer: 'Positioning staff across the map ensures that our largest gatherings remain safe and enjoyable.', keywords: ['positioning staff', 'largest gatherings', 'safe', 'enjoyable'] },
-                { id: 3, question: 'What should a moderator look for when monitoring for technical exploits?', correct_answer: 'Watch for players exploiting, then report it to the devs so they can improve the shield for the next event.', keywords: ['exploiting', 'report', 'devs', 'improve', 'shield'] },
-                { id: 4, question: 'How do you distinguish between a harmless player and a security threat?', correct_answer: 'Distinguish between harmless excitement and intentional security breaches. A threat is someone trolling, exploiting, or flying; a harmless player just wants to enjoy the event.', keywords: ['harmless excitement', 'intentional security breaches', 'trolling', 'exploiting', 'flying'] },
-                { id: 5, question: 'What moderation tools can be used for Crowd Stabilization?', correct_answer: 'Freeze and teleport (to move disruptors away from the group).', keywords: ['freeze', 'teleport', 'move disruptors'] },
-                { id: 6, question: 'Why is it important to maintain a calm demeanor if a security breach occurs?', correct_answer: 'Because if you stay calm, the community stays at ease; if you panic, you may cause panic among the community.', keywords: ['stay calm', 'community stays at ease', 'panic', 'cause panic'] },
+                { id: 1, question: 'Why is it important to identify choke points before an event starts?', correct_answer: 'Areas where lag or conflict may occur; allows rapid response to disruption.', keywords: ['choke points', 'lag', 'rapid response'] },
+                { id: 2, question: 'What is the primary benefit of assigning moderators to specific coordinates?', correct_answer: 'Ensures largest gatherings remain safe and enjoyable.', keywords: ['safe', 'enjoyable'] },
+                { id: 3, question: 'What should a moderator look for when monitoring for technical exploits?', correct_answer: 'Watch for players exploiting, report to devs to improve shield.', keywords: ['exploiting', 'report', 'shield'] },
+                { id: 4, question: 'How do you distinguish between a harmless player and a security threat?', correct_answer: 'Threat = trolling, exploiting, flying. Harmless = just wants to enjoy.', keywords: ['trolling', 'exploiting', 'flying'] },
+                { id: 5, question: 'What moderation tools can be used for Crowd Stabilization?', correct_answer: 'Freeze and teleport to move disruptors away.', keywords: ['freeze', 'teleport'] },
+                { id: 6, question: 'Why is it important to maintain a calm demeanor during a security breach?', correct_answer: 'If you stay calm, community stays at ease. Panic causes panic.', keywords: ['stay calm', 'panic'] },
                 { id: 7, question: 'What is the final step after an event has successfully concluded?', correct_answer: 'Post-event analysis and logging.', keywords: ['post-event analysis', 'logging'] },
-                { id: 8, question: 'How does post-event logging assist the development team?', correct_answer: 'It helps developers build a stronger shield for future events.', keywords: ['developers', 'stronger shield', 'future events'] },
+                { id: 8, question: 'How does post-event logging assist the development team?', correct_answer: 'Helps developers build a stronger shield for future events.', keywords: ['developers', 'stronger shield'] },
                 { id: 9, question: 'What is the moderator\'s role during Perimeter Monitoring?', correct_answer: 'To watch the crowd for exploiters.', keywords: ['watch', 'crowd', 'exploiters'] },
-                { id: 10, question: 'How does moving a disruptor to a different coordinate help the event?', correct_answer: 'So the event can resume normally, with no trolls and no exploiters with unfair advantages.', keywords: ['resume normally', 'no trolls', 'no exploiters', 'unfair advantages'] }
+                { id: 10, question: 'How does moving a disruptor to a different coordinate help the event?', correct_answer: 'Event resumes normally with no trolls or exploiters.', keywords: ['resume normally', 'no trolls'] }
             ]
         };
-
-        function showToast(message, type = 'success') {
+        
+        function showToast(msg) {
             const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMessage');
-            toastMsg.innerHTML = `<i class="ri-${type === 'success' ? 'check-line' : 'error-warning-line'} mr-2"></i>${message}`;
-            toast.classList.remove('hidden');
-            setTimeout(() => toast.classList.add('hidden'), 3000);
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
         }
-
+        
         async function loadQuestions() {
             const container = document.getElementById('questionsContainer');
-            const config = phaseSettings[currentPhase];
+            const settings = phaseSettings[currentPhase];
             
-            document.getElementById('phaseInfo').innerHTML = `
-                <div class="flex justify-between items-center flex-wrap gap-2">
-                    <span class="text-gray-300"><i class="ri-information-line mr-2"></i>${config.name}</span>
-                    <span class="text-gray-400 text-sm">Need ${config.passing}/${config.total} to pass</span>
-                </div>
+            document.getElementById('infoBar').innerHTML = `
+                <span class="info-title">📌 ${settings.name}</span>
+                <span class="info-score">Need ${settings.passing}/${settings.total} to pass</span>
             `;
             
-            // Load from Firestore
             const questionsRef = collection(db, `phases/${currentPhase}/questions`);
-            const querySnapshot = await getDocs(questionsRef);
-            
+            const snapshot = await getDocs(questionsRef);
             let questions = [];
-            querySnapshot.forEach(doc => {
-                questions.push({ id: doc.id, ...doc.data() });
-            });
+            snapshot.forEach(doc => questions.push({ firestoreId: doc.id, ...doc.data() }));
             
-            if (questions.length === 0) {
-                // Initialize with default questions
-                const defaults = DEFAULT_QUESTIONS[currentPhase] || [];
-                for (const q of defaults) {
+            if (questions.length === 0 && DEFAULT_QUESTIONS[currentPhase]) {
+                for (const q of DEFAULT_QUESTIONS[currentPhase]) {
                     await addDoc(collection(db, `phases/${currentPhase}/questions`), q);
                 }
-                questions = defaults;
+                questions = DEFAULT_QUESTIONS[currentPhase].map(q => ({ ...q }));
             }
             
-            questions.sort((a,b) => parseInt(a.id) - parseInt(b.id));
+            questions.sort((a,b) => a.id - b.id);
             
-            if (!questions.length) {
-                container.innerHTML = `
-                    <div class="text-center py-12 bg-gray-800/30 rounded-xl">
-                        <i class="ri-question-line text-5xl text-gray-600 mb-3 block"></i>
-                        <p class="text-gray-400">No questions for this phase yet.</p>
-                        <button onclick="openAddQuestionModal()" class="mt-4 px-4 py-2 bg-green-600/20 rounded-lg text-green-300">Add First Question</button>
-                    </div>
-                `;
+            if (questions.length === 0) {
+                container.innerHTML = `<div class="empty-state">No questions. Click "Add Question" to start.</div>`;
                 return;
             }
-
+            
             container.innerHTML = questions.map(q => `
-                <div class="bg-gray-800/30 rounded-xl p-5 border border-gray-700/50 card-hover transition-all">
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-3 flex-wrap">
-                                <span class="bg-purple-600/30 text-purple-300 text-xs font-medium px-2 py-1 rounded-full">Q${q.id}</span>
-                                <span class="text-gray-500 text-xs"><i class="ri-keyword-line"></i> ${q.keywords?.length || 0} keywords</span>
-                            </div>
-                            <p class="text-white font-medium mb-3">${escapeHtml(q.question)}</p>
-                            <div class="bg-gray-900/50 rounded-lg p-3 mb-2">
-                                <span class="text-green-400 text-xs"><i class="ri-checkbox-circle-line"></i> Correct Answer:</span>
-                                <p class="text-gray-300 text-sm mt-1">${escapeHtml(q.correct_answer)}</p>
-                            </div>
-                            <div class="flex flex-wrap gap-1">
-                                ${q.keywords?.map(k => `<span class="bg-gray-700/50 text-gray-400 text-xs px-2 py-0.5 rounded-full">${escapeHtml(k)}</span>`).join('') || ''}
-                            </div>
-                        </div>
-                        <button onclick="openEditModal('${q.id}')" class="ml-4 p-2 hover:bg-gray-700 rounded-lg transition text-gray-400 hover:text-white">
-                            <i class="ri-edit-line text-lg"></i>
-                        </button>
+                <div class="question-card">
+                    <div class="card-header">
+                        <span class="q-badge">Q${q.id}</span>
+                        <button class="edit-btn" onclick="openEditModal('${q.firestoreId}', ${q.id}, \`${escapeHtml(q.question)}\`, \`${escapeHtml(q.correct_answer)}\`, '${(q.keywords || []).join(',')}')">✏️</button>
+                    </div>
+                    <div class="question-text">${escapeHtml(q.question)}</div>
+                    <div class="answer-box">
+                        <div class="answer-label">✓ Correct Answer</div>
+                        <div class="answer-text">${escapeHtml(q.correct_answer)}</div>
+                    </div>
+                    <div class="keywords">
+                        ${(q.keywords || []).map(k => `<span class="keyword-tag">${escapeHtml(k)}</span>`).join('')}
                     </div>
                 </div>
             `).join('');
         }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
-
-        async function saveQuestion() {
-            const id = currentEditId;
-            const questionNumber = document.getElementById('editQuestionNumber').value;
-            const questionText = document.getElementById('editQuestionText').value;
-            const answer = document.getElementById('editAnswer').value;
-            const keywords = document.getElementById('editKeywords').value.split(',').map(k => k.trim());
-            
-            const questionRef = doc(db, `phases/${currentPhase}/questions`, id);
-            await updateDoc(questionRef, {
-                id: parseInt(questionNumber),
-                question: questionText,
-                correct_answer: answer,
-                keywords: keywords
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-            
+        }
+        
+        window.openEditModal = (id, num, question, answer, keywords) => {
+            currentEditId = id;
+            document.getElementById('editNumber').value = num;
+            document.getElementById('editQuestion').value = question;
+            document.getElementById('editAnswer').value = answer;
+            document.getElementById('editKeywords').value = keywords;
+            document.getElementById('editModal').style.display = 'flex';
+        };
+        
+        window.saveQuestion = async () => {
+            const data = {
+                id: parseInt(document.getElementById('editNumber').value),
+                question: document.getElementById('editQuestion').value,
+                correct_answer: document.getElementById('editAnswer').value,
+                keywords: document.getElementById('editKeywords').value.split(',').map(k => k.trim())
+            };
+            const ref = doc(db, `phases/${currentPhase}/questions`, currentEditId);
+            await updateDoc(ref, data);
             closeModal('editModal');
             loadQuestions();
-            showToast('Question updated successfully!');
-        }
-
-        async function deleteQuestion() {
-            if (confirm('Are you sure you want to delete this question?')) {
-                const questionRef = doc(db, `phases/${currentPhase}/questions`, currentEditId);
-                await deleteDoc(questionRef);
+            showToast('Question updated');
+        };
+        
+        window.deleteQuestion = async () => {
+            if (confirm('Delete this question?')) {
+                const ref = doc(db, `phases/${currentPhase}/questions`, currentEditId);
+                await deleteDoc(ref);
                 closeModal('editModal');
                 loadQuestions();
                 showToast('Question deleted');
             }
-        }
-
-        async function addQuestion() {
-            const questionNumber = document.getElementById('addQuestionNumber').value;
-            const questionText = document.getElementById('addQuestionText').value;
-            const answer = document.getElementById('addAnswer').value;
-            const keywords = document.getElementById('addKeywords').value.split(',').map(k => k.trim());
-            
-            await addDoc(collection(db, `phases/${currentPhase}/questions`), {
-                id: parseInt(questionNumber),
-                question: questionText,
-                correct_answer: answer,
-                keywords: keywords
-            });
-            
-            closeModal('addModal');
-            document.getElementById('addQuestionNumber').value = '';
-            document.getElementById('addQuestionText').value = '';
+        };
+        
+        window.openAddModal = () => {
+            document.getElementById('addNumber').value = '';
+            document.getElementById('addQuestion').value = '';
             document.getElementById('addAnswer').value = '';
             document.getElementById('addKeywords').value = '';
+            document.getElementById('addModal').style.display = 'flex';
+        };
+        
+        window.addQuestion = async () => {
+            const data = {
+                id: parseInt(document.getElementById('addNumber').value),
+                question: document.getElementById('addQuestion').value,
+                correct_answer: document.getElementById('addAnswer').value,
+                keywords: document.getElementById('addKeywords').value.split(',').map(k => k.trim())
+            };
+            await addDoc(collection(db, `phases/${currentPhase}/questions`), data);
+            closeModal('addModal');
             loadQuestions();
-            showToast('Question added successfully!');
-        }
-
-        async function saveSettings() {
-            const name = document.getElementById('settingsPhaseName').value;
-            const total = parseInt(document.getElementById('settingsTotal').value);
-            const passing = parseInt(document.getElementById('settingsPassing').value);
-            
-            phaseSettings[currentPhase] = { name, total, passing };
-            
-            // Save to Firestore
+            showToast('Question added');
+        };
+        
+        window.openSettingsModal = () => {
+            const s = phaseSettings[currentPhase];
+            document.getElementById('settingsName').value = s.name;
+            document.getElementById('settingsTotal').value = s.total;
+            document.getElementById('settingsPassing').value = s.passing;
+            document.getElementById('settingsModal').style.display = 'flex';
+        };
+        
+        window.saveSettings = async () => {
+            phaseSettings[currentPhase] = {
+                name: document.getElementById('settingsName').value,
+                total: parseInt(document.getElementById('settingsTotal').value),
+                passing: parseInt(document.getElementById('settingsPassing').value)
+            };
             await setDoc(doc(db, 'phaseSettings', currentPhase), phaseSettings[currentPhase]);
-            
             closeModal('settingsModal');
             loadQuestions();
-            showToast('Settings saved!');
-        }
-
-        function openEditModal(id) {
-            currentEditId = id;
-            // Load question data and populate modal
-            document.getElementById('editModal').classList.remove('hidden');
-        }
-
-        function openAddQuestionModal() {
-            document.getElementById('addModal').classList.remove('hidden');
-        }
-
-        function openSettingsModal() {
-            const settings = phaseSettings[currentPhase];
-            document.getElementById('settingsPhaseName').value = settings.name;
-            document.getElementById('settingsTotal').value = settings.total;
-            document.getElementById('settingsPassing').value = settings.passing;
-            document.getElementById('settingsModal').classList.remove('hidden');
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).classList.add('hidden');
-        }
-
-        function exportData() {
-            const data = {
-                questions: DEFAULT_QUESTIONS,
-                settings: phaseSettings,
-                exportDate: new Date().toISOString()
-            };
+            showToast('Settings saved');
+        };
+        
+        window.exportData = () => {
+            const data = { questions: DEFAULT_QUESTIONS, settings: phaseSettings };
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `sgfrp_backup_${currentPhase}.json`;
+            a.download = `sgfrp_backup.json`;
             a.click();
             URL.revokeObjectURL(url);
-            showToast('Data exported!');
-        }
-
-        function logout() {
-            signOut(auth);
+            showToast('Exported');
+        };
+        
+        window.closeModal = (id) => {
+            document.getElementById(id).style.display = 'none';
+        };
+        
+        window.logout = () => {
+            sessionStorage.removeItem('sgfrp_user');
             window.location.href = 'login.html';
-        }
-
-        // Auth state listener
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                document.getElementById('currentUser').textContent = user.email;
-                
-                // Load phase settings from Firestore
-                const settingsRef = await getDoc(doc(db, 'phaseSettings', currentPhase));
-                if (settingsRef.exists()) {
-                    Object.assign(phaseSettings[currentPhase], settingsRef.data());
-                }
-                
-                loadQuestions();
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Phase button handlers
+        };
+        
         document.querySelectorAll('.phase-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 document.querySelectorAll('.phase-btn').forEach(b => b.classList.remove('active'));
@@ -514,12 +712,15 @@
             });
         });
         
-        document.getElementById('adminPanelBtn').addEventListener('click', () => {
-            window.location.href = 'admin.html';
-        });
-        
-        // Set active phase button
-        document.querySelector('.phase-btn').classList.add('active');
+        // Check login
+        const savedUser = sessionStorage.getItem('sgfrp_user');
+        if (!savedUser) {
+            window.location.href = 'login.html';
+        } else {
+            currentUser = JSON.parse(savedUser);
+            document.getElementById('currentUser').textContent = currentUser.username;
+            loadQuestions();
+        }
     </script>
 </body>
 </html>
