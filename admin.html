@@ -4,61 +4,198 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SGFRP - User Management</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%); }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0e27;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #e5e7eb;
+        }
+        .header {
+            background: #0f1433;
+            border-bottom: 1px solid #1a2050;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo-icon {
+            background: #1e3a8a;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .logo-text h2 {
+            font-size: 18px;
+            color: white;
+        }
+        .logo-text p {
+            font-size: 12px;
+            color: #6b7280;
+        }
+        .back-btn {
+            background: #1e3a8a;
+            padding: 8px 16px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+        .card {
+            background: #0f1433;
+            border: 1px solid #1a2050;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .card h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: white;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        .form-group label {
+            display: block;
+            color: #9ca3af;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px 12px;
+            background: #0a0e24;
+            border: 1px solid #1f2940;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        .btn-create {
+            background: #1e3a8a;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        .user-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .user-item {
+            background: #0a0e24;
+            border: 1px solid #1f2940;
+            border-radius: 12px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .user-info .username {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 4px;
+        }
+        .user-info .role {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        .current-badge {
+            background: #064e3b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            color: #6ee7b7;
+        }
+        .remove-btn {
+            background: #7f1d1d;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #fca5a5;
+            cursor: pointer;
+            border: none;
+        }
+        .empty-text {
+            text-align: center;
+            color: #6b7280;
+            padding: 24px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #1f2937;
+            padding: 12px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 14px;
+            display: none;
+            z-index: 100;
+        }
     </style>
 </head>
-<body class="gradient-bg min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <div class="flex justify-between items-center mb-8">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                    <i class="ri-user-settings-line text-white text-xl"></i>
-                </div>
-                <h1 class="text-2xl font-bold text-white">User Management</h1>
+<body>
+    <div class="header">
+        <div class="logo-area">
+            <div class="logo-icon">👥</div>
+            <div class="logo-text">
+                <h2>User Management</h2>
+                <p>Add or Remove Admin Users</p>
             </div>
-            <a href="index.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
-                <i class="ri-arrow-left-line mr-1"></i> Back to Dashboard
-            </a>
+        </div>
+        <a href="index.html" class="back-btn">← Back</a>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <h2>➕ Add New Admin</h2>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="newUsername" placeholder="BennySparrow">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="newPassword" placeholder="Enter password">
+            </div>
+            <button class="btn-create" onclick="addUser()">➕ Create User</button>
         </div>
 
-        <!-- Add User Form -->
-        <div class="bg-gray-800/50 rounded-xl p-6 mb-8 border border-gray-700">
-            <h2 class="text-lg font-semibold text-white mb-4">➕ Add New Admin User</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
-                    <input type="email" id="newEmail" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="newadmin@sgfrp.com">
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                    <input type="password" id="newPassword" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="Enter password">
-                </div>
-            </div>
-            <div class="mt-4">
-                <label class="block text-sm font-medium text-gray-300 mb-1">Display Name</label>
-                <input type="text" id="newDisplayName" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="John Doe">
-            </div>
-            <button onclick="addUser()" class="mt-4 px-6 py-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg font-medium">
-                <i class="ri-add-line mr-1"></i> Create User
-            </button>
-        </div>
-
-        <!-- Users List -->
-        <div class="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
-            <h2 class="text-lg font-semibold text-white mb-4">👥 Admin Users</h2>
-            <div id="usersList" class="space-y-3">
-                <div class="text-center text-gray-400 py-8">Loading users...</div>
+        <div class="card">
+            <h2>👥 Existing Admins</h2>
+            <div id="usersList" class="user-list">
+                <div class="empty-text">Loading...</div>
             </div>
         </div>
     </div>
 
+    <div id="toast" class="toast"></div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, deleteUser, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, query, where } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD1LtDoqN6yMP70xLbY_8HRkM4STJvFk0M",
@@ -71,93 +208,105 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-
-        let currentUser = null;
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                currentUser = user;
-                await loadUsers();
-            } else {
-                window.location.href = 'login.html';
-            }
-        });
-
+        
+        let currentUsername = null;
+        
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+        
         async function loadUsers() {
             const usersList = document.getElementById('usersList');
-            const usersRef = collection(db, 'admins');
-            const querySnapshot = await getDocs(usersRef);
-            
+            const snapshot = await getDocs(collection(db, 'admins'));
             const users = [];
-            querySnapshot.forEach(doc => {
-                users.push({ id: doc.id, ...doc.data() });
-            });
+            snapshot.forEach(doc => users.push({ id: doc.id, ...doc.data() }));
             
             if (users.length === 0) {
-                usersList.innerHTML = '<div class="text-center text-gray-400 py-8">No users found. Add your first admin user above.</div>';
+                usersList.innerHTML = '<div class="empty-text">No users found. Create your first admin above.</div>';
                 return;
             }
             
             usersList.innerHTML = users.map(user => `
-                <div class="bg-gray-900/50 rounded-lg p-4 flex justify-between items-center">
-                    <div>
-                        <p class="font-medium text-white">${escapeHtml(user.displayName || user.email)}</p>
-                        <p class="text-sm text-gray-400">${escapeHtml(user.email)}</p>
-                        <p class="text-xs text-gray-500 mt-1">Created: ${new Date(user.createdAt).toLocaleDateString()}</p>
+                <div class="user-item">
+                    <div class="user-info">
+                        <div class="username">${escapeHtml(user.username)}</div>
+                        <div class="role">${user.role || 'admin'}</div>
                     </div>
-                    ${user.email !== currentUser?.email ? `
-                        <button onclick="removeUser('${user.id}', '${user.email}')" class="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-red-300 text-sm transition">
-                            <i class="ri-delete-bin-line"></i> Remove
-                        </button>
-                    ` : '<span class="text-xs text-green-400">Current</span>'}
+                    <div>
+                        ${user.username === currentUsername ? 
+                            '<span class="current-badge">You</span>' : 
+                            `<button class="remove-btn" onclick="removeUser('${user.id}', '${user.username}')">Remove</button>`
+                        }
+                    </div>
                 </div>
             `).join('');
         }
-
+        
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+        
         window.addUser = async () => {
-            const email = document.getElementById('newEmail').value;
+            const username = document.getElementById('newUsername').value.trim();
             const password = document.getElementById('newPassword').value;
-            const displayName = document.getElementById('newDisplayName').value;
+            
+            if (!username || !password) {
+                showToast('Username and password are required');
+                return;
+            }
             
             try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                await setDoc(doc(db, 'admins', userCredential.user.uid), {
-                    email: email,
-                    displayName: displayName,
-                    createdAt: new Date().toISOString(),
-                    role: 'admin'
+                const existing = await getDocs(query(collection(db, 'admins'), where('username', '==', username)));
+                if (!existing.empty) {
+                    showToast('Username already exists');
+                    return;
+                }
+                
+                await addDoc(collection(db, 'admins'), {
+                    username: username,
+                    password: password,
+                    role: 'admin',
+                    createdAt: new Date().toISOString()
                 });
                 
-                document.getElementById('newEmail').value = '';
+                document.getElementById('newUsername').value = '';
                 document.getElementById('newPassword').value = '';
-                document.getElementById('newDisplayName').value = '';
-                
                 await loadUsers();
-                alert('User created successfully!');
+                showToast(`User ${username} created`);
             } catch (error) {
-                alert('Error creating user: ' + error.message);
+                showToast('Error: ' + error.message);
             }
         };
-
-        window.removeUser = async (userId, email) => {
-            if (confirm(`Remove ${email}? This cannot be undone.`)) {
+        
+        window.removeUser = async (userId, username) => {
+            if (confirm(`Remove ${username}?`)) {
                 try {
                     await deleteDoc(doc(db, 'admins', userId));
                     await loadUsers();
-                    alert('User removed');
+                    showToast(`${username} removed`);
                 } catch (error) {
-                    alert('Error removing user: ' + error.message);
+                    showToast('Error: ' + error.message);
                 }
             }
         };
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        
+        // Check login
+        const savedUser = sessionStorage.getItem('sgfrp_user');
+        if (!savedUser) {
+            window.location.href = 'login.html';
+        } else {
+            currentUsername = JSON.parse(savedUser).username;
+            loadUsers();
         }
     </script>
 </body>
