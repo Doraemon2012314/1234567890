@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SGFRP - User Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 100%); }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                    <i class="ri-user-settings-line text-white text-xl"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white">User Management</h1>
+            </div>
+            <a href="index.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition">
+                <i class="ri-arrow-left-line mr-1"></i> Back to Dashboard
+            </a>
+        </div>
+
+        <!-- Add User Form -->
+        <div class="bg-gray-800/50 rounded-xl p-6 mb-8 border border-gray-700">
+            <h2 class="text-lg font-semibold text-white mb-4">➕ Add New Admin User</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Email</label>
+                    <input type="email" id="newEmail" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="newadmin@sgfrp.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
+                    <input type="password" id="newPassword" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="Enter password">
+                </div>
+            </div>
+            <div class="mt-4">
+                <label class="block text-sm font-medium text-gray-300 mb-1">Display Name</label>
+                <input type="text" id="newDisplayName" class="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white" placeholder="John Doe">
+            </div>
+            <button onclick="addUser()" class="mt-4 px-6 py-2 bg-gradient-to-r from-green-600 to-teal-600 rounded-lg font-medium">
+                <i class="ri-add-line mr-1"></i> Create User
+            </button>
+        </div>
+
+        <!-- Users List -->
+        <div class="bg-gray-800/50 rounded-xl p-6 border border-gray-700">
+            <h2 class="text-lg font-semibold text-white mb-4">👥 Admin Users</h2>
+            <div id="usersList" class="space-y-3">
+                <div class="text-center text-gray-400 py-8">Loading users...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, deleteUser, signOut } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+        import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD1LtDoqN6yMP70xLbY_8HRkM4STJvFk0M",
+            authDomain: "project-6644503116144405608.firebaseapp.com",
+            projectId: "project-6644503116144405608",
+            storageBucket: "project-6644503116144405608.firebasestorage.app",
+            messagingSenderId: "565051436196",
+            appId: "1:565051436196:web:87b40921cd6db7c0548a31",
+            measurementId: "G-JXGMLVT038"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                await loadUsers();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        async function loadUsers() {
+            const usersList = document.getElementById('usersList');
+            const usersRef = collection(db, 'admins');
+            const querySnapshot = await getDocs(usersRef);
+            
+            const users = [];
+            querySnapshot.forEach(doc => {
+                users.push({ id: doc.id, ...doc.data() });
+            });
+            
+            if (users.length === 0) {
+                usersList.innerHTML = '<div class="text-center text-gray-400 py-8">No users found. Add your first admin user above.</div>';
+                return;
+            }
+            
+            usersList.innerHTML = users.map(user => `
+                <div class="bg-gray-900/50 rounded-lg p-4 flex justify-between items-center">
+                    <div>
+                        <p class="font-medium text-white">${escapeHtml(user.displayName || user.email)}</p>
+                        <p class="text-sm text-gray-400">${escapeHtml(user.email)}</p>
+                        <p class="text-xs text-gray-500 mt-1">Created: ${new Date(user.createdAt).toLocaleDateString()}</p>
+                    </div>
+                    ${user.email !== currentUser?.email ? `
+                        <button onclick="removeUser('${user.id}', '${user.email}')" class="px-3 py-1 bg-red-600/20 hover:bg-red-600/30 rounded-lg text-red-300 text-sm transition">
+                            <i class="ri-delete-bin-line"></i> Remove
+                        </button>
+                    ` : '<span class="text-xs text-green-400">Current</span>'}
+                </div>
+            `).join('');
+        }
+
+        window.addUser = async () => {
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const displayName = document.getElementById('newDisplayName').value;
+            
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                await setDoc(doc(db, 'admins', userCredential.user.uid), {
+                    email: email,
+                    displayName: displayName,
+                    createdAt: new Date().toISOString(),
+                    role: 'admin'
+                });
+                
+                document.getElementById('newEmail').value = '';
+                document.getElementById('newPassword').value = '';
+                document.getElementById('newDisplayName').value = '';
+                
+                await loadUsers();
+                alert('User created successfully!');
+            } catch (error) {
+                alert('Error creating user: ' + error.message);
+            }
+        };
+
+        window.removeUser = async (userId, email) => {
+            if (confirm(`Remove ${email}? This cannot be undone.`)) {
+                try {
+                    await deleteDoc(doc(db, 'admins', userId));
+                    await loadUsers();
+                    alert('User removed');
+                } catch (error) {
+                    alert('Error removing user: ' + error.message);
+                }
+            }
+        };
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
